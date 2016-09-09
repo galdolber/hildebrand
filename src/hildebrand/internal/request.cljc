@@ -30,19 +30,17 @@
     (namespaced-name k) (to-attr-value v)))
 
 (defn to-attr-value [v]
-  (let [v (cond-> v (keyword? v) namespaced-name)]
-    (cond
-      (string?     v) {:S (throw-empty v)}
-      (nil?        v) {:NULL true}
-      (boolean?    v) {:BOOL v}
-      (ddb-num?    v) {:N (str v)}
-      (vector?     v) {:L (map to-attr-value v)}
-      (map?        v) {:M (->item v)}
-      (byte-array? v) {:B (ba->b64-string v)}
-      (set?        v) (to-set-attr v)
-
-      (expr/hildebrand-literal? v) v
-      :else (assert false (str "Invalid value " (type v))))))
+  (cond
+    (string?     v) {:S (throw-empty v)}
+    (nil?        v) {:NULL true}
+    (boolean?    v) {:BOOL v}
+    (ddb-num?    v) {:N (str v)}
+    (vector?     v) {:L (map to-attr-value v)}
+    (map?        v) {:M (->item v)}
+    (byte-array? v) {:B (ba->b64-string v)}
+    (set?        v) (to-set-attr v)
+    (expr/hildebrand-literal? v) v
+    :else {:S (str "■ƒ" (pr-str v))}))
 
 (def comparison-ops {:< :lt :<= :le := :eq :> :gt :>= :ge :begins-with :begins_with})
 

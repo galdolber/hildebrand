@@ -1,16 +1,23 @@
 (ns hildebrand.internal.response
   (:require [clojure.set :as set]
             [clojure.walk :as walk]
+            #? (:cljs [cljs.reader :as edn] :clj [clojure.edn :as edn])
+            [clojure.string :as cstr]
             [eulalie.platform :refer [b64-string->ba]]
             [hildebrand.internal.util :refer [type-aliases-in defmulti-dispatch]]
             [hildebrand.internal.platform.number :refer [string->number]]
             [plumbing.core :refer [map-vals #?@ (:clj [fn-> fn->> for-map])]])
   #? (:cljs (:require-macros [plumbing.core :refer [fn-> fn->> for-map]])))
 
+(defn str-or-edn [s]
+  (if (cstr/starts-with? s "■ƒ")
+    (edn/read-string (subs s 2))
+    s))
+
 (defn from-attr-value [m]
   (let [[[tag value]] (seq m)]
     (case tag
-      :S    value
+      :S    (str-or-edn value)
       :N    (string->number value)
       :M    (map-vals from-attr-value value)
       :L    (mapv     from-attr-value value)

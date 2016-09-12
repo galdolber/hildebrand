@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]
             [clojure.walk :as walk]
             [glossop.misc :refer [stringy?]]
-            [hildebrand.internal.util :as util]
+            [hildebrand.internal.util :as util :refer [namespaced-name]]
             [plumbing.core :refer
              [dissoc-in #?@ (:clj [memoized-fn fn->> for-map])]])
   #? (:cljs (:require-macros [plumbing.core :refer [memoized-fn fn->> for-map]])))
@@ -33,7 +33,7 @@
        (-> x name (subs 0 1) (= "#"))))
 
 (defn alias-col [x segment->alias]
-  (let [n (name x)]
+  (let [n (namespaced-name x)]
     (cond->> n
       (not (aliased-col? n)) segment->alias)))
 
@@ -44,7 +44,7 @@
        segments))
 
 (defn unalias-col [x]
-  (let [n (name x)]
+  (let [n (namespaced-name x)]
     (cond-> n
       (= "#" (subs n 0 1)) (subs 1))))
 
@@ -63,13 +63,13 @@
    (fn [acc part]
      (if (integer? part)
        (str acc "[" part "]")
-       (str acc "." (name part))))
+       (str acc "." (namespaced-name part))))
    (str col) path))
 
 (defn path->attrs [segments segment->alias]
   (into {}
     (for [segment segments :when (stringy? segment)]
-      [(segment->alias (name segment)) (name segment)])))
+      [(segment->alias (namespaced-name segment)) (namespaced-name segment)])))
 
 (defn parameterize-op [{:keys [op-name col+path arg] :as op} segment->alias]
   (let [{aliased-col+path :col+path :as op}
@@ -92,7 +92,7 @@
 
 (defmulti  arg->call (fn [fn-name col arg] fn-name))
 (defmethod arg->call :default [fn-name col arg]
-  (str (name fn-name) "(" col "," arg ")"))
+  (str (namespaced-name fn-name) "(" col "," arg ")"))
 (defmethod arg->call :+ [_ col arg]
   (str col " + " arg))
 (defmethod arg->call :- [_ col arg]
@@ -135,7 +135,7 @@
     [ops (apply merge-with into param-maps)]))
 
 (defn op->vector [{:keys [op-name col+path arg]}]
-  (cond-> [(name op-name) (col+path->string col+path)]
+  (cond-> [(namespaced-name op-name) (col+path->string col+path)]
     (not= arg :hildebrand/no-arg) (conj arg)))
 
 (defmulti  op->string (fn [op-name op] op-name))
@@ -146,7 +146,7 @@
 
 (defmulti  op-group->string (fn [op-name ops] op-name))
 (defmethod op-group->string :default [op-name ops]
-  (str (name op-name) " "
+  (str (namespaced-name op-name) " "
        (str/join ", " (map (fn->> op->vector (op->string op-name)) ops))))
 (defmethod op-group->string :set [op-name ops]
   (str "set "
@@ -173,7 +173,7 @@
   (if (hildebrand-path? arg)
     {:args  [(col+path->string (alias-col+path arg segment->alias))]
      :attrs (path->attrs arg segment->alias)}
-    (let [g (name (gensym))]
+    (let [g (namespaced-name (gensym))]
       {:args [(str ":" g)] :values {(str ":" g) arg}})))
 
 (defmulti  parameterize-args (fn [op segment->alias] (:op-name op)))
@@ -233,17 +233,17 @@
 
 (defmulti  cond-expr-op->string (fn [[op & args]] op))
 (defmethod cond-expr-op->string :default [[op & args]]
-  (apply group (interpose (name op) args)))
+  (apply group (interpose (namespaced-name op) args)))
 (defmethod cond-expr-op->string :between [[op x y z]]
-  (group x (name op) y 'and z))
+  (group x (namespaced-name op) y 'and z))
 (defmethod cond-expr-op->string :in [[op x & xs]]
-  (group x (name op) (group (arglist xs))))
+  (group x (namespaced-name op) (group (arglist xs))))
 (defmethod cond-expr-op->string :not [[op arg]]
   (group 'not arg))
 (util/defmulti-dispatch cond-expr-op->string
   (for-map [[in-op out-op] prefix-ops]
     in-op (fn [[_ & args]]
-            (str (name out-op) (group (arglist args))))))
+            (str (namespaced-name out-op) (group (arglist args))))))
 
 (defn cond-expr->string [expr]
   (walk/postwalk

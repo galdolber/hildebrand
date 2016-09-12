@@ -5,15 +5,10 @@
             [hildebrand.internal.expr :as expr]
             [hildebrand.internal.platform.number :refer [boolean? ddb-num?]]
             [hildebrand.internal.util
-             :refer [type-aliases-out throw-empty defmulti-dispatch]]
+             :refer [type-aliases-out throw-empty defmulti-dispatch namespaced-name]]
             [plumbing.core :refer [map-vals #?@ (:clj [for-map])]])
   #? (:cljs
       (:require-macros [plumbing.core :refer [for-map map-vals]])))
-
-(defn namespaced-name [k]
-  (if (and (keyword? k) (namespace k))
-    (str (namespace k) "/" (name k))
-    (name k)))
 
 (defn to-set-attr [v]
   (let [v (throw-empty v)]

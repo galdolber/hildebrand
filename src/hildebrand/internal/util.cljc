@@ -1,5 +1,10 @@
 (ns hildebrand.internal.util)
 
+(defn namespaced-name [k]
+  (if (and (keyword? k) (namespace k))
+    (str (namespace k) "/" (name k))
+    (name k)))
+
 (defn throw-empty [x]
   (assert (not (empty? x)))
   x)

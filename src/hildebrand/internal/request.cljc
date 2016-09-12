@@ -41,8 +41,8 @@
 
 (defn ->key-conds [conds]
   (for-map [[col [op & args]] conds]
-    col {:attribute-value-list (map to-attr-value args)
-         :comparison-operator  (comparison-ops op op)}))
+           (namespaced-name col) {:attribute-value-list (map to-attr-value args)
+                                  :comparison-operator  (comparison-ops op op)}))
 
 (defn ->attr-value [[k v]]
   {:attribute-name (namespaced-name k)

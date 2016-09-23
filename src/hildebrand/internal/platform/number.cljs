@@ -21,7 +21,8 @@
   (let [v (BigNumber. s)]
     (if (and (= -1 (.indexOf s ".")) (<= (.precision v) 15))
       (js/parseInt s)
-      v)))
+      ;; TODO? v
+      (js/parseFloat s))))
 
 (defn boolean? [x]
   (= (type x) (type true)))

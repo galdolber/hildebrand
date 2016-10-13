@@ -16,7 +16,6 @@
    [io.nervous/eulalie         "0.6.8"]
    [prismatic/plumbing         "0.4.1"]]
   :exclusions [org.clojure/clojure]
-  :node-dependencies [[bignumber.js "2.0.7"]]
   :cljsbuild
   {:builds [{:id "main"
              :source-paths ["src"]

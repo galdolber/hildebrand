@@ -1,10 +1,10 @@
-(defproject io.nervous/hildebrand "0.4.4"
+(defproject galdolber/hildebrand "0.4.4"
   :description "High-level, asynchronous AWS client library"
   :url "https://github.com/nervous-systems/hildebrand"
   :license {:name "Unlicense" :url "http://unlicense.org/UNLICENSE"}
-  :scm {:name "git" :url "https://github.com/nervous-systems/hildebrand"}
-  :deploy-repositories [["clojars" {:creds :gpg}]]
-  :signing {:gpg-key "moe@nervous.io"}
+  ;;:scm {:name "git" :url "https://github.com/nervous-systems/hildebrand"}
+  ;;:deploy-repositories [["clojars" {:creds :gpg}]]
+  ;;:signing {:gpg-key "moe@nervous.io"}
   :global-vars {*warn-on-reflection* true
                 *print-meta* true}
   :source-paths ["src"]

@@ -3,7 +3,7 @@
             [clojure.set :as set]
             [eulalie.platform :refer [byte-array? ba->b64-string]]
             [hildebrand.internal.expr :as expr]
-            [hildebrand.internal.platform.number :refer [boolean? ddb-num?]]
+            [hildebrand.internal.platform.number :refer [ddb-num?]]
             [hildebrand.internal.util
              :refer [type-aliases-out throw-empty defmulti-dispatch namespaced-name]]
             [plumbing.core :refer [map-vals #?@ (:clj [for-map])]])

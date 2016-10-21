@@ -14,3 +14,5 @@ vars
 /out
 /node_modules
 /repl.clj
+
+src/hildebrand/internal/request.cljc

@@ -27,5 +27,3 @@
   (if (.contains s ".")
     (BigDecimal. s)
     (bigint (BigInteger. s))))
-
-(def boolean? (partial instance? Boolean))

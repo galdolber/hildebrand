@@ -13,6 +13,3 @@
   (if (= -1 (.indexOf s "."))
     (js/parseInt s)
     (js/parseFloat s)))
-
-(defn boolean? [x]
-  (= (type x) (type true)))

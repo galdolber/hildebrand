@@ -10,6 +10,11 @@
   #? (:cljs
       (:require-macros [plumbing.core :refer [for-map map-vals]])))
 
+(defn namespaced-name [k]
+  (if (and (keyword? k) (namespace k))
+    (str (namespace k) "/" (name k))
+    (name k)))
+
 (defn to-set-attr [v]
   (let [v (throw-empty v)]
     (cond

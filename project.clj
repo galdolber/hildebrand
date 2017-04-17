@@ -9,13 +9,11 @@
                 *print-meta* true}
   :source-paths ["src"]
   :plugins [[lein-cljsbuild "1.1.4"]
-            [lein-npm "0.5.0"]]
+            [lein-npm "0.6.2"]]
   :dependencies
   [[org.clojure/clojure "1.9.0-alpha11"]
-   [org.clojure/clojurescript "1.9.229"]
-   [prismatic/schema "1.1.3"]
-   [prismatic/plumbing         "0.5.3" :exclusions [prismatic/schema]]
-   [io.nervous/eulalie         "0.6.8" :exclusions [prismatic/plumbing]]]
+   ;;[org.clojure/clojurescript "1.9.229"]
+   [io.nervous/eulalie "0.6.10"]]
   :exclusions [org.clojure/clojure]
   :cljsbuild
   {:builds [{:id "main"
@@ -39,11 +37,4 @@
                         :output-dir "target/test-advanced"
                         :target :nodejs
                         :optimizations :advanced}}]}
-  :profiles {:dev
-             {:repl-options
-              {:nrepl-middleware
-               [cemerick.piggieback/wrap-cljs-repl]}
-              :dependencies
-              [[com.cemerick/piggieback "0.2.1"]
-               [org.clojure/tools.nrepl "0.2.10"]]
-              :source-paths ["src" "test"]}})
+  :profiles {:dev {:source-paths ["src" "test"]}})
